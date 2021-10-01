@@ -19,7 +19,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 3. Reason set 3
     1. Create components for complex scenarios such as data fetching and subscribing to events related code is not organized in one place. Beacse of stateful logic cannot break components into smaller ones
     2. Ex:
-        1. Dat fetching - In componentDidMount and componentDidUpdate
+        1. Data fetching - In componentDidMount and componentDidUpdate
         2. Event listerners - In componentDidMount and componentWillUnmount
 
 ## Rules of Hooks
@@ -40,6 +40,14 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## useContext
  Context provide a way to pass data through the component tree without having to pass props down manually at every level
+ Ex:
+     ```
+     const AppContext = createContext();
+     <AppContest.provider value = {{....}}>
+       <Login /> <User />
+     </AppContest.provider>  
+     const {...} = useContext(AppContext);
+     ```
 
 ## useReducer
   1. useReducer is a hook that is used for state management
@@ -66,16 +74,42 @@ Scenario | useState | useReducer
 ## useCallback
  1. useCallback us a hook that will return a memoized version of the callback function that only changes if one of the dependencies has changed
  2. It is useful when passing callbacks to optimized child component that rely on reference equality to prevent unnecessary renders
+ 3. Suppose we have one parent component having 5 child component, if any changes happens in any ofe of the child component, all of other component also ger re-render.
+ 4. we can avoild this re-render by using memo, which will not re-render a page unless any of it props or state ger changed
+ 5. When we are passing some function as props to child from parent component, if any changes happen in parent component will re-render child , Hence we need to check reference equality ie function before re-render not equal to fnction after re-render. So if we use memo, it cant solve the issue.
+ 6. useCallback is usefull when passing callback to optimize child componet that rely on reference equality to revent unneccessary render
+ 7. Ex:
+     ```javascript
+     const incremetAge = useCallback(()=> {
+       setAge(age +1);
+     },[age]);
+     ``` 
 
 ## useMemo
- It will cache the state value
+ 1. Suppose we have the logic to display sorted the array and display small counter value.
+ 2. For every sorting or increment page, get re-render but suppose sorting array takes 2s and increment takes 0.1s when we do increment then also it takes 2s, because of re-render of page it will again execute sorting logic wich usually takes 2s.
+ 3. Ex:
+     ```javascript
+     const isEven = useMemo(()=> {
+      let i = 0;
+      while ( i<2000) i++;
+      return count + 1;
+     },[count]);
+     ```  
 
 ## useRef
  used to create generic conatiner that can hold mutuable value similar to instance property on class component. This generic conatiner doesn't causere-render when data it stores changes, at the same time it also remembers stored data even after other state variable cause the re-render of component
 
- ## Custom Hooks
-  1. A custom Hook is basically a JavaScript function whose name starts with 'use'
-  2. A custom hook can also call other Hooks if required
-  3. It share the logic ie, Alernative to HOCs and Render Props
+## useLayoutEffect
+ 1. It is called before useEffect ie when before component start to laod (before inital render)
+ 2. useEffect called after first render of the page
+ 
+## useImperativeHandle
+ 1. Execute child logic on parent component
+ 
+## Custom Hooks
+ 1. A custom Hook is basically a JavaScript function whose name starts with 'use'
+ 2. A custom hook can also call other Hooks if required
+ 3. It share the logic ie, Alernative to HOCs and Render Props
  
 
